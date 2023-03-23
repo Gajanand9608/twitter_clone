@@ -8,7 +8,8 @@ class UIConstants {
     return AppBar(
       title: SvgPicture.asset(
         AssetsConstants.twitterLogo,
-        color: Pallete.blueColor,
+        colorFilter: const ColorFilter.mode(Pallete.blueColor, BlendMode.srcIn),
+        // color: Pallete.blueColor,
         height: 30,
       ),
       centerTitle: true,

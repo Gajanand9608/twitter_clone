@@ -1,9 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import 'package:twitter_clone/constants/constants.dart';
 import 'package:twitter_clone/features/auth/views/login_view.dart';
-
 import 'package:twitter_clone/features/auth/widgets/auth_field.dart';
 import 'package:twitter_clone/theme/theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -11,7 +11,6 @@ class Loader extends StatelessWidget {
   }
 }
 
-
 class LoadingPage extends StatelessWidget {
   const LoadingPage({super.key});
 
