@@ -6,5 +6,9 @@ class AppwriteConstants {
   static const String endPoint = 'http://192.168.100.9:80/v1';
 
   static const String usersCollection = '641bf07b1c49b2f26cf9';
+  static const String tweetsCollection = '64204c63eb9d190b89b4';
+  static const String imageBucket = '642053827d0e79213130';
+
+  static String imageUrl(String imageId) => '$endPoint/storage/buckets/$imageBucket/files/$imageId/view?project=$projectId&mode=admin';
 
 }

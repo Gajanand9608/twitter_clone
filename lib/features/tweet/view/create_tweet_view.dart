@@ -8,6 +8,7 @@ import 'package:twitter_clone/common/rounded_small_button.dart';
 import 'package:twitter_clone/constants/assets_constants.dart';
 import 'package:twitter_clone/core/utils.dart';
 import 'package:twitter_clone/features/auth/controllers/auth_controller.dart';
+import 'package:twitter_clone/features/tweet/controller/tweet_controller.dart';
 
 import '../../../common/loading_page.dart';
 import '../../../theme/pallete.dart';
@@ -37,10 +38,19 @@ class _CreateViewTweetState extends ConsumerState<CreateViewTweet> {
     setState(() {});
   }
 
+  void shareTweet() {
+    ref.read(tweetControllerProvider.notifier).shareTweet(
+          images: images,
+          text: tweetTextController.text,
+          context: context,
+        );
+    tweetTextController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserDetailsProvider).value;
-    print(currentUser);
+    final isLoading = ref.watch(tweetControllerProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -54,14 +64,14 @@ class _CreateViewTweetState extends ConsumerState<CreateViewTweet> {
         ),
         actions: [
           RoundedSmallButton(
-            onTap: () {},
+            onTap: shareTweet,
             label: 'Tweet',
             backgroundColor: Pallete.blueColor,
             textColor: Pallete.whiteColor,
           ),
         ],
       ),
-      body: currentUser == null
+      body: isLoading || currentUser == null
           ? const Loader()
           : SafeArea(
               child: SingleChildScrollView(
