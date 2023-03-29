@@ -19,6 +19,11 @@ final tweetControllerProvider = StateNotifierProvider<TweetController, bool>((re
 });
 
 
+final getTweetsProvider = FutureProvider((ref) {
+  final tweetController = ref.watch(tweetControllerProvider.notifier);
+  return tweetController.getTweets();
+});
+
 
 class TweetController extends StateNotifier<bool> {
   final Ref _ref;
@@ -127,5 +132,10 @@ class TweetController extends StateNotifier<bool> {
     final res = await _tweetAPI.shareTweet(tweet);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) => null);
+  }
+
+  Future<List<Tweet>> getTweets() async{
+    final tweetList  = await _tweetAPI.getTweets();
+    return tweetList.map((tweet) => Tweet.fromMap(tweet.data)).toList();
   }
 }
