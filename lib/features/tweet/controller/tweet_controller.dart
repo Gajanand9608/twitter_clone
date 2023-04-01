@@ -7,33 +7,53 @@ import 'package:twitter_clone/core/enums/tweet_type_enum.dart';
 import 'package:twitter_clone/core/utils.dart';
 import 'package:twitter_clone/features/auth/controllers/auth_controller.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
+import 'package:twitter_clone/models/user_model.dart';
 
 import '../../../apis/tweet_api.dart';
 
-final tweetControllerProvider = StateNotifierProvider<TweetController, bool>((ref) {
+final tweetControllerProvider =
+    StateNotifierProvider<TweetController, bool>((ref) {
   return TweetController(
     ref: ref,
     tweetAPI: ref.watch(tweetAPIProvider),
     storageAPI: ref.watch(storageAPIProvider),
-  ); 
+  );
 });
-
 
 final getTweetsProvider = FutureProvider((ref) {
   final tweetController = ref.watch(tweetControllerProvider.notifier);
   return tweetController.getTweets();
 });
 
+final getLatestTweetProvider = StreamProvider((ref) {
+  final tweetAPI = ref.watch(tweetAPIProvider);
+  return tweetAPI.getLatestTweet();
+});
 
 class TweetController extends StateNotifier<bool> {
   final Ref _ref;
   final TweetAPI _tweetAPI;
   final StorageAPI _storageAPI;
-  TweetController({required Ref ref, required TweetAPI tweetAPI,required StorageAPI storageAPI})
+  TweetController(
+      {required Ref ref,
+      required TweetAPI tweetAPI,
+      required StorageAPI storageAPI})
       : _ref = ref,
         _tweetAPI = tweetAPI,
         _storageAPI = storageAPI,
         super(false);
+
+  void likeTweet(Tweet tweet, UserModel user) async{
+    List<String> likes = tweet.likes;
+    if (tweet.likes.contains(user.uid)) {
+      likes.remove(user.uid);
+    } else {
+      likes.add(user.uid);
+    }
+    tweet = tweet.copyWith(likes: likes);
+    final res = await _tweetAPI.likeTweet(tweet);
+    res.fold((l) => null, (r) => null); 
+  }
 
   void shareTweet({
     required List<File> images,
@@ -88,7 +108,7 @@ class TweetController extends StateNotifier<bool> {
     state = true;
     final hashtags = _getHashtagsFromText(text);
     String link = _getLinkFromText(text);
-    final imageLinks = await  _storageAPI.uploadImage(images);
+    final imageLinks = await _storageAPI.uploadImage(images);
     final user = _ref.watch(currentUserDetailsProvider).value!;
     Tweet tweet = Tweet(
       text: text,
@@ -134,8 +154,8 @@ class TweetController extends StateNotifier<bool> {
     res.fold((l) => showSnackBar(context, l.message), (r) => null);
   }
 
-  Future<List<Tweet>> getTweets() async{
-    final tweetList  = await _tweetAPI.getTweets();
+  Future<List<Tweet>> getTweets() async {
+    final tweetList = await _tweetAPI.getTweets();
     return tweetList.map((tweet) => Tweet.fromMap(tweet.data)).toList();
   }
 }

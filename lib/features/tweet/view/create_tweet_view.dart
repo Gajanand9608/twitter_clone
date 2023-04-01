@@ -45,6 +45,7 @@ class _CreateViewTweetState extends ConsumerState<CreateViewTweet> {
           context: context,
         );
     tweetTextController.clear();
+    Navigator.pop(context);
   }
 
   @override
@@ -111,7 +112,7 @@ class _CreateViewTweetState extends ConsumerState<CreateViewTweet> {
                     if (images.isNotEmpty)
                       CarouselSlider(
                         items: images.map((file) {
-                          return Container(
+                          return SizedBox(
                               // margin: const EdgeInsets.symmetric(horizontal: 0),
                               width: MediaQuery.of(context).size.width,
                               child: Image.file(file));
