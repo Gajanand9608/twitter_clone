@@ -25,7 +25,6 @@ class TweetList extends ConsumerWidget {
                       'databases.*.collections.${AppwriteConstants.tweetsCollection}.documents.*.update',
                     )) {
                       // get id of tweet
-                      print(data.events[0]);
                       final startPoint =
                           data.events[0].lastIndexOf('documents.');
                       final endPoint = data.events[0].lastIndexOf('.update');
