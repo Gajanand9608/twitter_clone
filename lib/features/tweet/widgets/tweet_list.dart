@@ -17,6 +17,7 @@ class TweetList extends ConsumerWidget {
           data: (tweets) {
             return ref.watch(getLatestTweetProvider).when(
                   data: (data) {
+                    print(data.events[0]);
                     if (data.events.contains(
                       'databases.*.collections.${AppwriteConstants.tweetsCollection}.documents.*.create',
                     )) {
