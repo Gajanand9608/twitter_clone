@@ -39,7 +39,6 @@ class UserProfileView extends ConsumerWidget {
             ),
             loading: () {
               return UserProfile(user: copyOfUser);
-              return const Loader();
             },
           ),
     );

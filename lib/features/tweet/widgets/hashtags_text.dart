@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:twitter_clone/features/tweet/view/hasttag_view.dart';
 import 'package:twitter_clone/theme/pallete.dart';
 
 class HashtagText extends StatelessWidget {
@@ -19,6 +21,9 @@ class HashtagText extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
+              recognizer: TapGestureRecognizer()..onTap=(){
+                Navigator.push(context, HashtagView.route(element));
+              }
             ),
           );
         } else if (element.startsWith('www.') ||
