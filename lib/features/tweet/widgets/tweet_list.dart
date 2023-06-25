@@ -17,7 +17,7 @@ class TweetList extends ConsumerWidget {
           data: (tweets) {
             return ref.watch(getLatestTweetProvider).when(
                   data: (data) {
-                    print(data.events[0]);
+                    // print(data.events[0]);
                     if (data.events.contains(
                       'databases.*.collections.${AppwriteConstants.tweetsCollection}.documents.*.create',
                     )) {
@@ -29,7 +29,8 @@ class TweetList extends ConsumerWidget {
                       final startPoint =
                           data.events[0].lastIndexOf('documents.');
                       final endPoint = data.events[0].lastIndexOf('.update');
-                      final tweetId = data.events[0].substring(startPoint+10,endPoint);
+                      final tweetId =
+                          data.events[0].substring(startPoint + 10, endPoint);
 
                       var tweet = tweets
                           .where((element) => element.id == tweetId)
@@ -39,7 +40,13 @@ class TweetList extends ConsumerWidget {
                       tweet = Tweet.fromMap(data.payload);
                       tweets.insert(tweetIndex, tweet);
                     }
-
+                    // return tweets.isEmpty
+                    //     ? const Text(
+                    //         'Nothing to show yet!',
+                    //         style: TextStyle(color: Colors.white),
+                    //       )
+                    //     :
+                
                     return ListView.builder(
                       itemCount: tweets.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -52,6 +59,14 @@ class TweetList extends ConsumerWidget {
                     error: error.toString(),
                   ),
                   loading: () {
+                    if (tweets.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'Nothing to show yet!',
+                          style: TextStyle(fontSize: 22),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       itemCount: tweets.length,
                       itemBuilder: (BuildContext context, int index) {
