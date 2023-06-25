@@ -11,6 +11,10 @@ import '../../../constants/appwrite_constants.dart';
 class TweetList extends ConsumerWidget {
   const TweetList({super.key});
 
+  Future<void> _refreshTweets(WidgetRef ref) async {
+    ref.watch(getTweetsProvider);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(getTweetsProvider).when(
@@ -40,19 +44,16 @@ class TweetList extends ConsumerWidget {
                       tweet = Tweet.fromMap(data.payload);
                       tweets.insert(tweetIndex, tweet);
                     }
-                    // return tweets.isEmpty
-                    //     ? const Text(
-                    //         'Nothing to show yet!',
-                    //         style: TextStyle(color: Colors.white),
-                    //       )
-                    //     :
-                
-                    return ListView.builder(
-                      itemCount: tweets.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final tweet = tweets[index];
-                        return TweetCard(tweet: tweet);
-                      },
+
+                    return RefreshIndicator(
+                      onRefresh: () => _refreshTweets(ref),
+                      child: ListView.builder(
+                        itemCount: tweets.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final tweet = tweets[index];
+                          return TweetCard(tweet: tweet);
+                        },
+                      ),
                     );
                   },
                   error: (error, stackTrace) => ErrorText(
